@@ -38,7 +38,7 @@ The add-ons to publish come from the `ADDON_SOURCES` Actions variable (Settings 
 
 ```
 https://github.com/shinn5112/plugin.video.crunchyroll.git#main
-https://github.com/shinn5112/kodi-hdmi-cec-power-controls.git#master
+https://github.com/shinn5112/kodi-hdmi-cec-power-controls.git#main
 ```
 
 Each entry is `REPOSITORY_URL#BRANCH_OR_TAG:PATH`, where the branch and path are optional. If the variable is unset, the two add-ons above are used. Setting it replaces that list, so include every add-on you want published.

@@ -37,7 +37,7 @@ jobs:
           ADDON_SOURCES: ${{ vars.ADDON_SOURCES }}
         run: |
           default_sources="https://github.com/shinn5112/plugin.video.crunchyroll.git#main
-          https://github.com/shinn5112/kodi-hdmi-cec-power-controls.git#master"
+          https://github.com/shinn5112/kodi-hdmi-cec-power-controls.git#main"
           sources="${ADDON_SOURCES:-$default_sources}"
           # Strip CRs (the GitHub UI may save CRLF) and disable globbing before word-splitting
           sources=$(printf '%s' "$sources" | tr -d '\r')
