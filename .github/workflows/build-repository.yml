@@ -1,0 +1,61 @@
+name: Build Kodi repository
+
+on:
+  repository_dispatch:
+    types: [addon-release]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-repository
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install gitpython
+
+      - name: Generate repository
+        env:
+          # Repository variable ADDON_SOURCES: whitespace/newline separated list
+          # of add-on locations, each formatted as REPOSITORY_URL#BRANCH:PATH
+          # (branch and path optional). Configure under
+          # Settings > Secrets and variables > Actions > Variables.
+          # When set, it replaces the default list below.
+          ADDON_SOURCES: ${{ vars.ADDON_SOURCES }}
+        run: |
+          default_sources="https://github.com/shinn5112/plugin.video.crunchyroll.git#main
+          https://github.com/shinn5112/kodi-hdmi-cec-power-controls.git#master"
+          sources="${ADDON_SOURCES:-$default_sources}"
+          # Strip CRs (the GitHub UI may save CRLF) and disable globbing before word-splitting
+          sources=$(printf '%s' "$sources" | tr -d '\r')
+          set -f
+          # shellcheck disable=SC2086
+          python scripts/create_repository.py --no-parallel src/repository.shinn5112 $sources
+
+      - name: Commit and push changes
+        env:
+          SOURCE_REPO: ${{ github.event.client_payload.repository }}
+          SOURCE_TAG: ${{ github.event.client_payload.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Update repository (${SOURCE_REPO:-manual} ${SOURCE_TAG})"
+          git push origin main
