@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.module.hdmi-cec-power-controls"
+       name="HDMI CEC Power Controls"
+       version="0.2.0"
+       provider-name="shinn5112">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+  </requires>
+
+  <extension point="xbmc.python.script" library="addon.py">
+    <provides>executable</provides>
+  </extension>
+
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en_GB">Trigger HDMI CEC power commands from Kodi JSON-RPC</summary>
+    <description lang="en_GB">
+      Exposes simple script actions (on/off) that can be invoked through
+      Addons.ExecuteAddon over Kodi's JSON-RPC API. Pass action=on to send
+      CECActivateSource or action=off to send CECStandby.
+    </description>
+    <news>v0.2.0
+  - Renamed add-on id to script.module.hdmi-cec-power-controls to follow Kodi naming conventions
+  - Restructured repository so the add-on lives at the repository root
+
+  v0.1.6
+  - Reverted OFF action to Kodi-native CECStandby for adapter compatibility
+  - Removed runtime dependency on external cec-client command execution
+
+  v0.1.5
+  - Improved cec-client execution by appending quit and handling command timeouts
+  - OFF command no longer treats cec-client timeout as missing binary
+
+  v0.1.4
+  - Added explicit cec-client path resolution for OSMC (/usr/osmc/bin/cec-client)
+
+  v0.1.3
+  - OFF action now targets TV directly via cec-client standby 0
+  - Keeps CECStandby as fallback when cec-client is unavailable
+
+  v0.1.2
+  - Improved addon log format with structured event markers
+  - Updated Python typing for Kodi runtime compatibility
+
+  v0.1.1
+  - Repackaged for clean install testing
+
+  v0.1.0
+  - Initial release
+  - Supports on/off CEC power commands via Addons.ExecuteAddon JSON-RPC
+    </news>
+    <platform>all</platform>
+    <license>GPL-3.0-only</license>
+    <source>https://github.com/shinn5112/kodi-hdmi-cec-power-controls</source>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+  </extension>
+</addon>
